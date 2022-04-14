@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
         scope: {
           profileType: "Parent",
         }}),
-       Parent.hasMany(models.Chiled)
+       Parent.hasMany(models.Child)
       }
   }
   Parent.init({

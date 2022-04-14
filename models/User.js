@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "profileId",
         constraints: false,
       });
-      User.belongsTo(models.Chiled, {
+      User.belongsTo(models.Child, {
         foreignKey: "profileId",
         constraints: false,
       });

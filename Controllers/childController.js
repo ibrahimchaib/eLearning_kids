@@ -1,8 +1,8 @@
-const { Chiled } = require("../models");
+const { Child } = require("../models");
 
 //get request by Id
 exports.show = async(req, res)=>{
-    await Chiled.findByPk(req.params.id)
+    await Child.findByPk(req.params.id)
     .then((result) => {
       res.status(200).json({
         data: result,
@@ -17,7 +17,7 @@ exports.show = async(req, res)=>{
 }
 //request ALL Data
 exports.index = async(req, res)=>{
-    await Chiled.findAll()
+    await Child.findAll()
     .then((result) => {
       if (result != "") {
         res.status(200).json({
@@ -37,16 +37,16 @@ exports.index = async(req, res)=>{
       });
     });
 }
-//create Chileds
+//create Childs
 exports.create = async(req, res)=>{
-    await Chiled.create(req.body).then((result) => {
+    await Child.create(req.body).then((result) => {
         res.status(201).json(result);
         const { username, email, password, profileId, profileType } = {
           username: req.body.username,
           email: req.body.email,
           password: req.body.password,
           profileId: result.id,
-          profileType: "Chiled",
+          profileType: "Child",
         };
         User.create({ username, email, password, profileId, profileType }).then(
           (result) => {
@@ -56,10 +56,10 @@ exports.create = async(req, res)=>{
       });
 }
 exports.update = async(req, res)=>{
-    await Chiled.findByPk(req.params.id)
+    await Child.findByPk(req.params.id)
     .then((data) => {
       if (data.id) {
-        Chiled.update(req.body, { where: { id: data.id } }).then(() => {
+        Child.update(req.body, { where: { id: data.id } }).then(() => {
           res.status(200).json({
             msg: "Updates Sucess",
           });
@@ -74,10 +74,10 @@ exports.update = async(req, res)=>{
 }
 //delete by ID
 exports.destroy = async (req, res) => {
-  await Chiled.findByPk(req.params.id)
+  await Child.findByPk(req.params.id)
     .then((data) => {
       if (data.id) {
-        Team.destroy({ where: { id: req.params.id } }).then(() => {
+        Child.destroy({ where: { id: req.params.id } }).then(() => {
           res.status(200).json({
             msg: "Record Deleted",
             status : 'sucess'

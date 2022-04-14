@@ -1,4 +1,4 @@
-const { Parent } = require("../models");
+const { Parent, User } = require("../models");
 
 
 //get request by Id
@@ -78,7 +78,7 @@ exports.destroy = async (req, res) => {
   await Parent.findByPk(req.params.id)
     .then((data) => {
       if (data.id) {
-        Team.destroy({ where: { id: req.params.id } }).then(() => {
+        Parent.destroy({ where: { id: req.params.id } }).then(() => {
           res.status(200).json({
             msg: "Record Deleted",
             status : 'sucess'
