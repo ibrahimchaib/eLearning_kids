@@ -17,7 +17,7 @@ module.exports = {
       birthday: {
         type: Sequelize.DATE
       },
-      contry: {
+      country: {
         type: Sequelize.STRING
       },
       picture: {

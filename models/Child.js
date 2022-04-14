@@ -15,22 +15,22 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "profileId",
         constraints: false,
         scope: {
-          profileType: "Chiled",
+          profileType: "Child",
         }}),
       
-      Chiled.belongsTo(models.Parent, {foreignKey: 'parent_id'})
+      Child.belongsTo(models.Parent, {foreignKey: 'parent_id'})
     }
   }
-  Chiled.init({
+  Child.init({
     family_name: DataTypes.STRING,
     first_name: DataTypes.STRING,
     birthday: DataTypes.DATE,
-    contry: DataTypes.STRING,
+    country: DataTypes.STRING,
     picture: DataTypes.BLOB,
     parent_id: DataTypes.INTEGER
   }, {
     sequelize,
-    modelName: 'Chiled',
+    modelName: 'Child',
   });
-  return Chiled;
+  return Child;
 };
