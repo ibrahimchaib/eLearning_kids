@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "profileId",
         constraints: false,
       });
-      User.belongsTo(models.Child, {
+      User.belongsTo(models.Kid, {
         foreignKey: "profileId",
         constraints: false,
       });

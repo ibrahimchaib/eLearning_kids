@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
         scope: {
           profileType: "Parent",
         }}),
-       Parent.hasMany(models.Child)
+       Parent.hasMany(models.Kid)
       }
   }
   Parent.init({

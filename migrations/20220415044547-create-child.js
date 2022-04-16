@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Childs', {
+    await queryInterface.createTable('Children', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -26,10 +26,9 @@ module.exports = {
       parent_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: {         // Parent hasMany Users 1:n
+        references: {         // Parent hasMany kids 1:n
           model: 'Parents',
-          key: 'id'
-        }
+          key: 'id'}
       },
       createdAt: {
         allowNull: false,
@@ -42,6 +41,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Childs');
+    await queryInterface.dropTable('Children');
   }
 };

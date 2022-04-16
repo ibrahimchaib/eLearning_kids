@@ -54,7 +54,11 @@ exports.create = async(req, res)=>{
             res.status(201).json();
           }
         );
-      });
+      }).catch(()=>{
+        res.status(500).json({
+          message: "sommthing went wrong",
+        });
+      })
 }
 exports.update = async(req, res)=>{
     await Parent.findByPk(req.params.id)

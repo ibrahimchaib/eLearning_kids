@@ -1,15 +1,15 @@
-const { Child } = require("../models");
+const { Kid, User } = require("../models");
 
 //get request by Id
 exports.show = async(req, res)=>{
-    await Child.findByPk(req.params.id)
+    await Kid.findByPk(req.params.id)
     .then((result) => {
       res.status(200).json({
         data: result,
       });
     })
     .catch((error) => {
-      res.status(500).json({
+      res.status(404).json({
         error: error,
         message: "Not Found",
       });
@@ -17,7 +17,7 @@ exports.show = async(req, res)=>{
 }
 //request ALL Data
 exports.index = async(req, res)=>{
-    await Child.findAll()
+    await Kid.findAll()
     .then((result) => {
       if (result != "") {
         res.status(200).json({
@@ -37,31 +37,37 @@ exports.index = async(req, res)=>{
       });
     });
 }
-//create Childs
+//create Kids
 exports.create = async(req, res)=>{
-    await Child.create(req.body).then((result) => {
-        res.status(201).json(result);
+    await Kid.create(req.body).then((result) => {
+        const kid_result = result;
         const { username, email, password, profileId, profileType } = {
           username: req.body.username,
           email: req.body.email,
           password: req.body.password,
           profileId: result.id,
-          profileType: "Child",
+          profileType: "Kid",
         };
         User.create({ username, email, password, profileId, profileType }).then(
-          (result) => {
-            res.status(201).json();
+          (User_result) => {
+            res.status(201).json({
+              User_result, 
+              kid_result
+            });
           }
         );
-      });
+      }).catch(()=>{
+        res.status(404).json('something went wrong')
+      })
 }
 exports.update = async(req, res)=>{
-    await Child.findByPk(req.params.id)
+    await Kid.findByPk(req.params.id)
     .then((data) => {
       if (data.id) {
-        Child.update(req.body, { where: { id: data.id } }).then(() => {
+        Kid.update(req.body, { where: { id: data.id } }).then(() => {
           res.status(200).json({
             msg: "Updates Sucess",
+            data
           });
         });
       }
@@ -74,16 +80,19 @@ exports.update = async(req, res)=>{
 }
 //delete by ID
 exports.destroy = async (req, res) => {
-  await Child.findByPk(req.params.id)
+  await Kid.findByPk(req.params.id)
     .then((data) => {
-      if (data.id) {
-        Child.destroy({ where: { id: req.params.id } }).then(() => {
+      res.status(200).json({
+        msg: "Record Deleted",
+        status : data
+      })
+        Kid.destroy({ where: { id: data.id } })
+        .then(() => {
           res.status(200).json({
             msg: "Record Deleted",
             status : 'sucess'
           });
         });
-      }
     })
     .catch(() => {
       res.status(404).json({
