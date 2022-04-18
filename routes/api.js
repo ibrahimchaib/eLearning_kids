@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const parentController = require('../Controllers/parentController');
-const kidController = require('../Controllers/kidController');
+const kidController = require('../Controllers/childController');
 const authController = require('../Controllers/authController');
 
 /* GET home page. */

@@ -1,8 +1,8 @@
-const { Kid, User } = require("../models");
+const { Child, User } = require("../models");
 
 //get request by Id
 exports.show = async(req, res)=>{
-    await Kid.findByPk(req.params.id)
+    await Child.findByPk(req.params.id)
     .then((result) => {
       res.status(200).json({
         data: result,
@@ -17,7 +17,7 @@ exports.show = async(req, res)=>{
 }
 //request ALL Data
 exports.index = async(req, res)=>{
-    await Kid.findAll()
+    await Child.findAll()
     .then((result) => {
       if (result != "") {
         res.status(200).json({
@@ -37,22 +37,22 @@ exports.index = async(req, res)=>{
       });
     });
 }
-//create Kids
+//create Childs
 exports.create = async(req, res)=>{
-    await Kid.create(req.body).then((result) => {
-        const kid_result = result;
+    await Child.create(req.body).then((result) => {
+        const Child_result = result;
         const { username, email, password, profileId, profileType } = {
           username: req.body.username,
           email: req.body.email,
           password: req.body.password,
           profileId: result.id,
-          profileType: "Kid",
+          profileType: "Child",
         };
         User.create({ username, email, password, profileId, profileType }).then(
           (User_result) => {
             res.status(201).json({
               User_result, 
-              kid_result
+              Child_result
             });
           }
         );
@@ -61,10 +61,10 @@ exports.create = async(req, res)=>{
       })
 }
 exports.update = async(req, res)=>{
-    await Kid.findByPk(req.params.id)
+    await Child.findByPk(req.params.id)
     .then((data) => {
       if (data.id) {
-        Kid.update(req.body, { where: { id: data.id } }).then(() => {
+        Child.update(req.body, { where: { id: data.id } }).then(() => {
           res.status(200).json({
             msg: "Updates Sucess",
             data
@@ -80,13 +80,9 @@ exports.update = async(req, res)=>{
 }
 //delete by ID
 exports.destroy = async (req, res) => {
-  await Kid.findByPk(req.params.id)
+  await Child.findByPk(req.params.id)
     .then((data) => {
-      res.status(200).json({
-        msg: "Record Deleted",
-        status : data
-      })
-        Kid.destroy({ where: { id: data.id } })
+        Child.destroy({ where: { id: data.id } })
         .then(() => {
           res.status(200).json({
             msg: "Record Deleted",
