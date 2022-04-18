@@ -82,6 +82,7 @@ exports.update = async(req, res)=>{
 exports.destroy = async (req, res) => {
   await Child.findByPk(req.params.id)
     .then((data) => {
+        User.destroy({where : {profileId: data.id}})
         Child.destroy({ where: { id: data.id } })
         .then(() => {
           res.status(200).json({

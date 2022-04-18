@@ -1,9 +1,9 @@
-const { Parent, User } = require("../models");
-
+const { Parent, User, Child } = require("../models");
+const { Op } = require("sequelize");
 
 //get request by Id
-exports.show = async(req, res)=>{
-    await Parent.findByPk(req.params.id)
+exports.show = async (req, res) => {
+  await Parent.findByPk(req.params.id)
     .then((result) => {
       res.status(200).json({
         data: result,
@@ -15,10 +15,10 @@ exports.show = async(req, res)=>{
         message: "Not Found",
       });
     });
-}
+};
 //request ALL Data
-exports.index = async(req, res)=>{
-    await Parent.findAll()
+exports.index = async (req, res) => {
+  await Parent.findAll()
     .then((result) => {
       if (result != "") {
         res.status(200).json({
@@ -37,31 +37,33 @@ exports.index = async(req, res)=>{
         msg: "Data base Empty",
       });
     });
-}
+};
 //create Parents
-exports.create = async(req, res)=>{
-    await Parent.create(req.body).then((result) => {
-        res.status(201).json(result);
-        const { username, email, password, profileId, profileType } = {
-          username: req.body.username,
-          email: req.body.email,
-          password: req.body.password,
-          profileId: result.id,
-          profileType: "Parent",
-        };
-        User.create({ username, email, password, profileId, profileType }).then(
-          (result) => {
-            res.status(201).json();
-          }
-        );
-      }).catch(()=>{
-        res.status(500).json({
-          message: "sommthing went wrong",
-        });
-      })
-}
-exports.update = async(req, res)=>{
-    await Parent.findByPk(req.params.id)
+exports.create = async (req, res) => {
+  await Parent.create(req.body)
+    .then((result) => {
+      res.status(201).json(result);
+      const { username, email, password, profileId, profileType } = {
+        username: req.body.username,
+        email: req.body.email,
+        password: req.body.password,
+        profileId: result.id,
+        profileType: "Parent",
+      };
+      User.create({ username, email, password, profileId, profileType }).then(
+        (result) => {
+          res.status(201).json();
+        }
+      );
+    })
+    .catch(() => {
+      res.status(500).json({
+        message: "sommthing went wrong",
+      });
+    });
+};
+exports.update = async (req, res) => {
+  await Parent.findByPk(req.params.id)
     .then((data) => {
       if (data.id) {
         Parent.update(req.body, { where: { id: data.id } }).then(() => {
@@ -76,26 +78,41 @@ exports.update = async(req, res)=>{
         message: "Not Found",
       });
     });
-}
+};
 //delete by ID
-exports.destroy = async (req, res) => {
-  await Parent.findByPk(req.params.id)
-    .then((data) => {
-      if (data.id) {
-        Parent.destroy({ where: { id: req.params.id } }).then(() => {
-          res.status(200).json({
-            msg: "Record Deleted",
-            status : 'sucess'
+exports.destroy = async (req, res, next) => {
+  const child_parent = await Parent.findByPk(req.params.id);
+  if (child_parent) {
+    await Child.findAll({
+      where: {
+        [Op.and]: [{ parent_id: child_parent.id }],
+      },
+    })
+      .then((Children) => {
+        Children.forEach((child) => {
+          User.destroy({
+            where: {
+              [Op.and]: [{ profileId: child.parent_id }]
+            },
           });
         });
-      }
-    })
-    .catch(() => {
-      res.status(404).json({
-        message: "Not Found",
-        status: '404'
+        Child.destroy({ where: { parent_id: child_parent.id } });
+        Parent.destroy({ where: { id: child_parent.id } });
+        res.status(200).json({
+          msg: "Record Deleted",
+          status: "sucess",
+        });
+      })
+      .catch(() => {
+        res.status(404).json({
+          message: "Not Found",
+          status: "404",
+        });
       });
+  } else {
+    res.status(404).json({
+      message: "Not Found",
+      status: "404",
     });
+  }
 };
-
-
