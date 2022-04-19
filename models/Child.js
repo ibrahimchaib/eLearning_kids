@@ -10,6 +10,15 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Child.hasMany(models.User, {
+        foreignKey: "profileId",
+        constraints: false,
+        scope: {
+          profileType: "Child",
+        }}),
+      
+        Child.belongsTo(models.Parent)
+        models.Parent.hasMany(Child)
     }
   }
   Child.init({
@@ -18,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
     birthday: DataTypes.DATE,
     country: DataTypes.STRING,
     picture: DataTypes.BLOB,
-    parent_id: DataTypes.INTEGER
+    ParentId: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Child',

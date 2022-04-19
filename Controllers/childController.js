@@ -19,7 +19,7 @@ exports.show = async(req, res)=>{
 exports.index = async(req, res)=>{
     await Child.findAll()
     .then((result) => {
-      if (result != "") {
+      if (result) {
         res.status(200).json({
           data: result,
           msg: "sucess",

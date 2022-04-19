@@ -1,5 +1,5 @@
 'use strict';
-const {   Model } = require('sequelize');
+const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "profileId",
         constraints: false,
       });
-      User.belongsTo(models.Kid, {
+      User.belongsTo(models.Child, {
         foreignKey: "profileId",
         constraints: false,
       });

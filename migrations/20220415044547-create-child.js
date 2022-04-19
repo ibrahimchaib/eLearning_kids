@@ -23,7 +23,7 @@ module.exports = {
       picture: {
         type: Sequelize.BLOB
       },
-      parent_id: {
+      ParentId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {         // Parent hasMany kids 1:n

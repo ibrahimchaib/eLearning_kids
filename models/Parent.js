@@ -1,7 +1,5 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Parent extends Model {
     /**
@@ -16,8 +14,8 @@ module.exports = (sequelize, DataTypes) => {
         constraints: false,
         scope: {
           profileType: "Parent",
-        }}),
-       Parent.hasMany(models.Kid)
+        }})
+      //  Parent.hasMany(models.Child)
       }
   }
   Parent.init({

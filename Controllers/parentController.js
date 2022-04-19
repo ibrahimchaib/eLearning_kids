@@ -58,7 +58,7 @@ exports.create = async (req, res) => {
     })
     .catch(() => {
       res.status(500).json({
-        message: "sommthing went wrong",
+        message: "something went wrong",
       });
     });
 };
@@ -82,36 +82,32 @@ exports.update = async (req, res) => {
 //delete by ID
 exports.destroy = async (req, res, next) => {
   const child_parent = await Parent.findByPk(req.params.id);
-  if (child_parent) {
-    await Child.findAll({
-      where: {
-        [Op.and]: [{ parent_id: child_parent.id }],
-      },
-    })
-      .then((Children) => {
-        Children.forEach((child) => {
-          User.destroy({
-            where: {
-              [Op.and]: [{ profileId: child.parent_id }]
-            },
-          });
-        });
-        Child.destroy({ where: { parent_id: child_parent.id } });
-        Parent.destroy({ where: { id: child_parent.id } });
-        res.status(200).json({
-          msg: "Record Deleted",
-          status: "sucess",
-        });
-      })
-      .catch(() => {
-        res.status(404).json({
-          message: "Not Found",
-          status: "404",
-        });
+  if (child_parent){
+    Child.findAll({ where: { ParentId: child_parent.id } })
+    .then((Children) => {
+      Children.forEach((child) => {
+        User.destroy({ where: { profileId: child.id } });
       });
-  } else {
+      Child.destroy({ where: { parent_id: child_parent.id } });
+      Parent.destroy({ where: { id: child_parent.id } });
+      User.destroy({ where: { profileId: child_parent.id } });
+      res.status(200).json({
+        msg: "Record Deleted",
+        status: "sucess",
+        child,
+      });
+    })
+    .catch(() => {
+      res.status(404).json({
+        message: "child not found",
+        status: "404",
+      });
+    });
+  }
+
+  else{
     res.status(404).json({
-      message: "Not Found",
+      message: "Parent Not found",
       status: "404",
     });
   }
