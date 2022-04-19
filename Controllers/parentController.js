@@ -81,31 +81,28 @@ exports.update = async (req, res) => {
 };
 //delete by ID
 exports.destroy = async (req, res, next) => {
+  //bulk delete { philosophy : if parents want to delete their profiles, child profiles it will deleted by default }
   const child_parent = await Parent.findByPk(req.params.id);
-  if (child_parent){
+  if (child_parent) {
     Child.findAll({ where: { ParentId: child_parent.id } })
-    .then((Children) => {
-      Children.forEach((child) => {
-        User.destroy({ where: { profileId: child.id } });
+      .then((Children) => {
+        Children.forEach((child) => {
+          User.destroy({ where: {profileId : { [Op.or]: [child.id, child_parent.id]}} });
+        });
+        Child.destroy({ where: { ParentId: child_parent.id } });
+        Parent.destroy({ where: { id: child_parent.id } });
+        res.status(200).json({
+          msg: "Record Deleted",
+          status: "sucess",
+        });
+      })
+      .catch(() => {
+        res.status(404).json({
+          message: "child not found",
+          status: "404",
+        });
       });
-      Child.destroy({ where: { parent_id: child_parent.id } });
-      Parent.destroy({ where: { id: child_parent.id } });
-      User.destroy({ where: { profileId: child_parent.id } });
-      res.status(200).json({
-        msg: "Record Deleted",
-        status: "sucess",
-        child,
-      });
-    })
-    .catch(() => {
-      res.status(404).json({
-        message: "child not found",
-        status: "404",
-      });
-    });
-  }
-
-  else{
+  } else {
     res.status(404).json({
       message: "Parent Not found",
       status: "404",
